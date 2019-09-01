@@ -98,19 +98,17 @@ func CopyStat(src, dst string, options *CopyOptions) error {
 // If follow_symlinks is false, symlinks won't be followed. This
 // resembles GNU's "cp -P src dst".
 func Copy2(src, dst string, options *CopyOptions) (string, error) {
-
+	// log.Println("copy2", "from", src, "to", dst)
 	followSymlinks := true
 	if options != nil {
 		followSymlinks = options.FollowSymlinks
 	}
 
 	dstInfo, err := os.Stat(dst)
-	if err != nil {
-		return "", err
-	}
-
-	if dstInfo.IsDir() {
-		dst = filepath.Join(dst, filepath.Base(src))
+	if err == nil {
+		if dstInfo.IsDir() {
+			dst = filepath.Join(dst, filepath.Base(src))
+		}
 	}
 
 	_, err = CopyFile(src, dst, &CopyOptions{FollowSymlinks: followSymlinks})
@@ -166,7 +164,7 @@ type CopyTreeOptions struct {
 // destination path as arguments. By default, copy2() is used, but any
 // function that supports the same signature (like copy()) can be used.
 func CopyTree(src, dst string, options *CopyTreeOptions) (string, error) {
-
+	// log.Println("copy tree", "from", src, "to", dst)
 	copyFunction := Copy2
 	if options != nil && options.CopyFunction != nil {
 		copyFunction = options.CopyFunction
