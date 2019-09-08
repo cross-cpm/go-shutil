@@ -233,3 +233,24 @@ func CopyTree(src, dst string, options *CopyTreeOptions) (string, error) {
 
 	return dst, nil
 }
+
+type RmTreeOptions struct {
+	IgnoreErrors bool
+	OnError      func(fn func(string), path string, exec_info interface{})
+}
+
+// Recursively delete a directory tree.
+//
+// If ignore_errors is set, errors are ignored; otherwise, if onerror
+// is set, it is called to handle the error with arguments (func,
+// path, exc_info) where func is platform and implementation dependent;
+// path is the argument to that function that caused it to fail; and
+// exc_info is a tuple returned by sys.exc_info().  If ignore_errors
+// is false and onerror is None, an exception is raised.
+func RmTree(path string, options *RmTreeOptions) error {
+	// onerror := func(fn func(string), path string, exec_info interface{}) {}
+	// if options != nil && !options.IgnoreErrors && options.OnError != nil {
+	// 	onerror = options.OnError
+	// }
+	return os.Remove(path)
+}
